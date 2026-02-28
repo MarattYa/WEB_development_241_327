@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="alert alert-success">
+    Cookie <strong>username=Marat</strong> успешно установлено!
+</div>
+
+<a href="{{ url_for('request_data') }}" class="btn btn-primary mt-3">&larr; Вернуться назад</a>
+{% endblock %}

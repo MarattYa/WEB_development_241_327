@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="my-4 text-center">Лабораторная работа №2</h1>
+        <p class="lead text-center">Flask: Запросы и формы</p>
+        
+        <div class="row mt-5">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0"> Задание 1</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-3 text-muted">Отображение данных запроса</h6>
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item">✓ Параметры URL</li>
+                            <li class="list-group-item">✓ Заголовки запроса</li>
+                            <li class="list-group-item">✓ Cookies</li>
+                            <li class="list-group-item">✓ Форма авторизации</li>
+                        </ul>
+                        <a href="{{ url_for('request_data') }}" class="btn btn-primary">Перейти к заданию 1</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0"> Задание 2</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-3 text-muted">Форма с обработкой ошибок</h6>
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item">✓ Валидация номера телефона</li>
+                            <li class="list-group-item">✓ Bootstrap классы ошибок</li>
+                            <li class="list-group-item">✓ Разные сообщения об ошибках</li>
+                            <li class="list-group-item">✓ Форматирование результата</li>
+                        </ul>
+                        <a href="{{ url_for('phone_check') }}" class="btn btn-success">Перейти к заданию 2</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
