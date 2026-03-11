@@ -103,20 +103,22 @@ def set_cookie():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
+    next_page = request.args.get('next')
 
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         remember = request.form.get('remember') == 'on'
+        next_page = request.form.get('next') or next_page
 
         if username in users and users[username]['password'] == password:
             user = User(username)
             login_user(user, remember=remember)
-            return redirect(url_for('index'))
+            return redirect(next_page or url_for('index'))
         else:
             error = "Неверный логин или пароль"
 
-    return render_template('login.html', error=error)
+    return render_template('login.html', error=error, next_page=next_page)
 
 @app.route('/logout')
 @login_required
