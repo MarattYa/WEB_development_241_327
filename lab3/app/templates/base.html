@@ -13,7 +13,7 @@
         {% if title %}
           {{ title }}
         {% else %}
-          Лабораторная работа №2
+          Лабораторная работа №3
         {% endif %}
     </title>
   </head>
@@ -21,7 +21,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-              <a class="navbar-brand" href="{{ url_for('index') }}">Лабораторная работа № 2</a>
+              <a class="navbar-brand" href="{{ url_for('index') }}">Лабораторная работа № 3</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -30,12 +30,15 @@
                   <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{{ url_for('index') }}">Задание</a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{{ url_for('posts') }}">Посты</a>
-                  </li>
+                  </li> -->
                   <li class="nav-item">
-                      <a class="nav-link" href="{{ url_for('request_data') }}">Данные запроса</a>
+                    <a class="nav-link" aria-current="page" href="{{ url_for('visits') }}">Счетчик</a>
                   </li>
+                  <!-- <li class="nav-item">
+                      <a class="nav-link" href="{{ url_for('request_data') }}">Данные запроса</a>
+                  </li> -->
                   {% if current_user.is_authenticated %}
 
                   <li class="nav-item">
@@ -53,9 +56,9 @@
                   </li>
 
                   {% endif %}
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                       <a class="nav-link " href="{{ url_for('phone_check') }}">Проверка телефона</a>
-                  </li>
+                  </li> -->
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('about') }}">Об авторе</a>
                   </li>
@@ -68,6 +71,18 @@
 
     <main class="my-3">
         <div class="container">
+            <!-- Блок для flash-сообщений -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             {% block content %}
                 <h1>Содержимое по умолчанию</h1>
             {% endblock %}

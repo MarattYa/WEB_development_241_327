@@ -1,6 +1,6 @@
 import random
-from flask import Flask, redirect, render_template, request, make_response, session, url_for
-from flask_session import Session
+from urllib.parse import urlparse
+from flask import Flask, flash, redirect, render_template, request, make_response, session, url_for
 from faker import Faker
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import re
@@ -24,6 +24,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = 'Для доступа необходимо авторизоваться'
+login_manager.login_message_category = 'info'
 
 class User(UserMixin):
     def __init__(self, id):
@@ -109,14 +110,19 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         remember = request.form.get('remember') == 'on'
-        next_page = request.form.get('next') or next_page
+        next_page = request.form.get('next')
 
+        if next_page in (None, '', 'None') or urlparse(next_page).netloc !='':
+            next_page=None
+        
         if username in users and users[username]['password'] == password:
             user = User(username)
             login_user(user, remember=remember)
+            flash(f"Вы успешно вошли как {username}", "success")
             return redirect(next_page or url_for('index'))
         else:
             error = "Неверный логин или пароль"
+            flash('Неверный логин или пароль', 'danger')
 
     return render_template('login.html', error=error, next_page=next_page)
 
@@ -124,6 +130,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash('Вы успешно вышли из системы', 'info')
     return redirect(url_for('index'))
 
 @app.route('/secret')
