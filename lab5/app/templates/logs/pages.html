@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Статистика посещений страниц</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Страница</th>
+            <th>Количество посещений</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for page, count in data %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ page }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('reports.pages_csv') }}" class="btn btn-success">Экспорт в CSV</a>
+{% endblock %}

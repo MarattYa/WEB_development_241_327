@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm mx-auto" style="max-width: 700px;">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="bi bi-person-circle me-2" style="font-size: 1.5rem;"></i>
+            <h4 class="mb-0">Мой профиль</h4>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <!-- Аватар -->
+                <div class="col-md-4 text-center mb-3">
+                    <img src="{{ url_for('static', filename='images/avatar.jpg') }}" 
+                         class="rounded-circle img-fluid border border-2 border-primary" 
+                         alt="Avatar" style="max-width: 150px;">
+                </div>
+
+                <!-- Информация о пользователе -->
+                <div class="col-md-8">
+                    <table class="table table-borderless mb-0 fs-5">
+                        <tbody>
+                            <tr>
+                                <th scope="row" style="width: 130px;">Логин:</th>
+                                <td><code>{{ current_user.login }}</code></td>
+                            </tr>
+                            <tr>
+                                <th>Фамилия:</th>
+                                <td>{{ current_user.last_name or '—' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Имя:</th>
+                                <td>{{ current_user.first_name or '—' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Отчество:</th>
+                                <td>{{ current_user.patronymic or '—' }}</td>
+                            </tr>
+                            <tr>
+                                <th>Роль:</th>
+                                <td>
+                                    {% if current_user.role %}
+                                        <span class="badge bg-info text-dark">
+                                            <i class="bi bi-tag me-1"></i> {{ current_user.role.name }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопки действия -->
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{{ url_for('change_password') }}" class="btn btn-warning">
+                <i class="bi bi-key me-1"></i> Сменить пароль
+            </a>
+            <a href="{{ url_for('edit_profile') }}" class="btn btn-primary">
+                <i class="bi bi-pencil-square me-1"></i> Редактировать профиль
+            </a>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">
+                <i class="bi bi-box-arrow-right me-1"></i> Выйти
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

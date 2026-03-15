@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Статистика посещений пользователей</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Пользователь</th>
+            <th>Количество посещений</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for full_name, count in data %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ full_name }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('reports.users_csv') }}" class="btn btn-success">Экспорт в CSV</a>
+{% endblock %}
