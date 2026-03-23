@@ -126,7 +126,6 @@ def delete_user(user_id):
 
     return redirect(url_for('users_list'))
 
-# ---------------- ПРОФИЛЬ ----------------
 
 @login_required
 def profile():
@@ -176,7 +175,6 @@ def change_password():
     return render_template("profile/change_password.html", form=form)
 
 
-# ---------------- РЕГИСТРАЦИЯ ----------------
 
 def register():
 

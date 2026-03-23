@@ -16,6 +16,7 @@ def login():
 
         if user and user.check_password(password):
             login_user(user)
+            flash("Вы успешно вошли в систему!", 'success')
             return redirect(url_for('users_list'))
         else:
             flash("Неверный логин или пароль", 'danger')

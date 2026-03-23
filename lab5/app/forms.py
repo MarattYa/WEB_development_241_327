@@ -55,13 +55,11 @@ class ChangePasswordForm(FlaskForm):
     submit = SubmitField('Изменить пароль')
 
 
-# Форма для логина
 class LoginForm(FlaskForm):
     login = StringField('Логин', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
     submit = SubmitField('Войти')
 
-# Форма для регистрации
 class RegisterForm(FlaskForm):
     login = StringField('Логин', validators=[
         DataRequired(),

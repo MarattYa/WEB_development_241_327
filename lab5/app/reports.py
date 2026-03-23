@@ -6,7 +6,6 @@ import csv, io
 
 reports = Blueprint('reports', __name__, url_prefix="/logs")
 
-# ----------------- Журнал посещений -----------------
 @reports.route("/")
 @login_required
 def visit_log():
@@ -35,7 +34,6 @@ def visit_log():
 
     return render_template("logs/index.html", logs=logs, pagination=pagination)
 
-# ----------------- Отчёт по страницам -----------------
 @reports.route("/pages")
 @login_required
 def report_pages():
@@ -51,25 +49,27 @@ def report_pages():
 def pages_csv():
     data = db.session.query(
         VisitLog.path,
-        func.count(VisitLog.id).label("visits_count")
-    ).group_by(VisitLog.path).order_by(func.count(VisitLog.id).desc()).all()
+        func.count(VisitLog.id)
+    ).group_by(VisitLog.path)\
+     .order_by(func.count(VisitLog.id).desc()).all()
 
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(["Страница", "Количество посещений"])
-    for row in data:
-        writer.writerow(row)
 
-    response = make_response(output.getvalue())
+    writer.writerow(["№", "Страница", "Количество посещений"])
+
+    for i, (path, count) in enumerate(data, start=1):
+        writer.writerow([i, path, count])
+
+    response = make_response('\ufeff' + output.getvalue())
     response.headers["Content-Disposition"] = "attachment; filename=pages_report.csv"
-    response.headers["Content-type"] = "text/csv"
+    response.headers["Content-type"] = "text/csv; charset=utf-8"
+
     return response
 
-# ----------------- Отчёт по пользователям -----------------
 @reports.route("/users")
 @login_required
 def report_users():
-    # Считаем посещения по пользователям, включая возможность отсутствия user_id
     data = db.session.query(
         User.id,
         User.last_name,
@@ -80,7 +80,6 @@ def report_users():
      .group_by(User.id)\
      .order_by(func.count(VisitLog.id).desc()).all()
 
-    # Формируем список для шаблона с ФИО или "Неаутентифицированный пользователь"
     formatted_data = []
     for u_id, last, first, patronymic, count in data:
         full_name = f"{last} {first} {patronymic or ''}".strip() if u_id else "Неаутентифицированный пользователь"
@@ -96,19 +95,22 @@ def users_csv():
         User.last_name,
         User.first_name,
         User.patronymic,
-        func.count(VisitLog.id).label("visits_count")
+        func.count(VisitLog.id)
     ).join(VisitLog, VisitLog.user_id == User.id)\
      .group_by(User.id)\
      .order_by(func.count(VisitLog.id).desc()).all()
 
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(["Пользователь", "Количество посещений"])
-    for u_id, last, first, patronymic, count in data:
-        full_name = f"{last} {first} {patronymic or ''}".strip() if u_id else "Неаутентифицированный пользователь"
-        writer.writerow([full_name, count])
 
-    response = make_response(output.getvalue())
+    writer.writerow(["№", "Пользователь", "Количество посещений"])
+
+    for i, (u_id, last, first, patronymic, count) in enumerate(data, start=1):
+        full_name = f"{last} {first} {patronymic or ''}".strip()
+        writer.writerow([i, full_name, count])
+
+    response = make_response('\ufeff' + output.getvalue())
     response.headers["Content-Disposition"] = "attachment; filename=users_report.csv"
-    response.headers["Content-type"] = "text/csv"
+    response.headers["Content-type"] = "text/csv; charset=utf-8"
+
     return response

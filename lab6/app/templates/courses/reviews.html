@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Заголовок -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Отзывы о {{ course.name }}</h2>
+        <a href="{{ url_for('courses.show', course_id=course.id) }}"
+           class="btn btn-outline-secondary btn-sm">
+            ← К курсу
+        </a>
+    </div>
+
+    <!-- Фильтр -->
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <form method="get" class="row g-2 align-items-center">
+
+                <div class="col-auto">
+                    <label for="sort" class="col-form-label">Сортировка:</label>
+                </div>
+
+                <div class="col-auto">
+                    <select name="sort" id="sort" class="form-select">
+                        <option value="new" {% if sort=='new' %}selected{% endif %}>Сначала новые</option>
+                        <option value="positive" {% if sort=='positive' %}selected{% endif %}>Сначала положительные</option>
+                        <option value="negative" {% if sort=='negative' %}selected{% endif %}>Сначала отрицательные</option>
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">
+                        Применить
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Список отзывов -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+
+            {% if reviews %}
+                <ul class="list-group list-group-flush">
+
+                    {% for review in reviews %}
+                    <li class="list-group-item">
+
+                        <div class="d-flex justify-content-between">
+                            <strong>
+                                {{ review.user.first_name }} {{ review.user.last_name }}
+                            </strong>
+
+                            <small class="text-muted">
+                                {{ review.created_at.strftime('%d.%m.%Y %H:%M') }}
+                            </small>
+                        </div>
+
+                        <div class="mt-2">
+                            <span class="badge 
+                                {% if review.rating >= 4 %}bg-success
+                                {% elif review.rating >= 2 %}bg-warning text-dark
+                                {% else %}bg-danger{% endif %}">
+                                Оценка: {{ review.rating }}
+                            </span>
+                        </div>
+
+                        <p class="mt-2 mb-0">
+                            {{ review.text }}
+                        </p>
+
+                    </li>
+                    {% endfor %}
+
+                </ul>
+            {% else %}
+                <div class="p-3 text-muted">
+                    Отзывов пока нет.
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- Пагинация -->
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+
+            {% if page > 1 %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="{{ url_for('courses.reviews', course_id=course.id, page=page-1, sort=sort) }}">
+                   ←
+                </a>
+            </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">
+                    Страница {{ page }} из {{ total_pages }}
+                </span>
+            </li>
+
+            {% if page < total_pages %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="{{ url_for('courses.reviews', course_id=course.id, page=page+1, sort=sort) }}">
+                   →
+                </a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+
+</div>
+{% endblock %}
